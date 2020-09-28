@@ -12,9 +12,9 @@ plot_norm_tails(
   xmin = NULL,
   xmax = NULL,
   len = 1000,
-  fill_cdf_upper = rgb(0, 0.3, 0.8, 0.25),
-  fill_cdf_lower = rgb(0, 0.3, 0.8, 0.25),
+  fill_lower = rgb(0, 0.3, 0.8, 0.25),
   fill_middle = rgb(0, 0, 0, 0),
+  fill_upper = rgb(0, 0.3, 0.8, 0.25),
   y_lab = "f(x)",
   x_lab = "x"
 )

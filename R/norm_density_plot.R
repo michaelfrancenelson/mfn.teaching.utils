@@ -275,10 +275,11 @@ norm_quantile_plot = function(
 
 
 
-#'
+#' Build a pdf curve for a normal dist
 #'
 #' @export
 #'
+
 build_dnorm_dat = function(
   xmin,
   xmax,
@@ -378,11 +379,9 @@ plot_norm_tails = function(
   xmin = NULL,
   xmax = NULL,
   len = 1000,
-  fill_cdf_upper = rgb(0, 0.3, 0.8, 0.25),
-  fill_cdf_lower = rgb(0, 0.3, 0.8, 0.25),
+  fill_lower = rgb(0, 0.3, 0.8, 0.25),
   fill_middle = rgb(0, 0, 0, 0),
-  # digits = 2,
-  # lty_density = 2,
+  fill_upper = rgb(0, 0.3, 0.8, 0.25),
   y_lab = "f(x)",
   x_lab = "x"
 
@@ -400,8 +399,8 @@ plot_norm_tails = function(
     xmin = NULL
     xmax = NULL
     len = 1000
-    fill_cdf_upper = rgb(0, 0.3, 0.8, 0.25)
-    fill_cdf_lower = rgb(0, 0.3, 0.8, 0.25)
+    fill_upper = rgb(0, 0.3, 0.8, 0.25)
+    fill_lower = rgb(0, 0.3, 0.8, 0.25)
     fill_middle = rgb(0, 0, 0, 0)
     digits = 2
     lty_density = 2
@@ -424,7 +423,6 @@ plot_norm_tails = function(
     pop_mean = pop_mean,
     pop_sd = pop_sd)
 
-
   lower_crit = upper_crit = NULL
 
   if (!is.null(upper_tail))
@@ -433,95 +431,22 @@ plot_norm_tails = function(
   if (!is.null(lower_tail))
     lower_crit = qnorm(lower_tail, mean = pop_mean, sd = pop_sd)
 
-  ribbon_dat = build_tail_dat(norm_dat, lower = lower_crit, upper = upper_crit)
+  ribbon_dat = build_tail_dat(
+    norm_dat,
+    lower = lower_crit,
+    upper = upper_crit)
+  gg_ribbons = build_ribbons(
+    ribbon_dat,
+    fill_lower = fill_lower,
+    fill_middle = fill_middle,
+    fill_upper = fill_upper)
 
-  # ribbon_dat = build_tail_dat(norm_dat)
-
-
-
-
-  head(ribbon_dat$tails$upper)
-
-  if(is.null(lower_tail))
-  {
-    ribbon_lower = NULL
-  } else
-  {
-    ribbon_lower =
-      geom_ribbon(
-        data = ribbon_dat$tails$lower,
-        mapping = aes(x = x, ymin = y0, ymax = y1),
-        fill = fill_cdf_lower)
-  }
-
-  if(is.null(upper_tail))
-  {
-    ribbon_upper = NULL
-  } else
-  {
-    ribbon_upper =
-      geom_ribbon(
-        data = ribbon_dat$tails$upper,
-        mapping = aes(x = x, ymin = y0, ymax = y1),
-        fill = fill_cdf_upper)
-  }
-
-
-  ribbon_middle =
-    geom_ribbon(
-      data = ribbon_dat$middle,
-      mapping = aes(x = x, ymin = y0, ymax = y1),
-      fill = fill_middle)
-
-
-
-
-
-  tail(ribbon_dat$tails$lower)
-  head(ribbon_dat$tails$lower)
-  head(ribbon_dat$middle)
-
-  # }
-  ggplot(norm_dat) +
-    geom_line(aes(x, y1)) +
-    ribbon_middle
-    # ribbon_upper +
-    # ribbon_lower
-
-
-  # if(is.null(lower_tail))
-  # {
-  #   ribbon_lower = NULL
-  # } else
-  # {
-  #   ribbon_lower =
-  #     geom_ribbon(
-  #       data = subset(norm_dat, x < qnorm(lower_tail)),
-  #       mapping = aes(x = x, ymin = y0, ymax = y1),
-  #       fill = fill_cdf)
-  # }
-
-  # if(is.null(upper_tail))
-  # {
-  #   ribbon_upper = NULL
-  # } else
-  # {
-  #   ribbon_upper =
-  #     geom_ribbon(
-  #       data = subset(norm_dat, x > qnorm(upper_tail)),
-  #       mapping = aes(x = x, ymin = y0, ymax = y1),
-  #       fill = fill_cdf)
-  # }
-  ggplot(norm_dat) +
-    geom_line(aes(x, y1)) +
-    ribbon_upper +
-    ribbon_lower
   return(
     ggplot(norm_dat) +
       geom_line(aes(x, y1)) +
-      ribbon_upper +
-      ribbon_lower +
-      ribbon_middle +
+      gg_ribbons$middle +
+      gg_ribbons$tails$lower +
+      gg_ribbons$tails$upper +
       ylab(y_lab) + xlab(x_lab)
   )
 }
@@ -537,15 +462,12 @@ plot_t_tails = function(
   upper_tail = 0.925,
   df_sample = 30,
   ncp_sample = 0,
-  # pop_mean = 0,
-  # pop_sd = 1,
   xmin = NULL,
   xmax = NULL,
   len = 1000,
-  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  fill_bkg = rgb(0, 0, 0, 0),
-  # digits = 2,
-  # lty_density = 2,
+  fill_lower = rgb(0, 0.3, 0.8, 0.25),
+  fill_middle = rgb(0, 0, 0, 0),
+  fill_upper = rgb(0, 0.3, 0.8, 0.25),
   y_lab = "f(x)",
   x_lab = "x",
   t_crit = 0.05
@@ -557,18 +479,19 @@ plot_t_tails = function(
   {
     lower_tail = 0.05
     upper_tail = 0.925
+    upper_tail = NULL
+
     df_sample = 30
     ncp_sample = 0
-    upper_tail = NULL
-    x_1 = 0.1
-    pop_mean = 0
-    pop_sd = 1
+
     xmin = NULL
     xmax = NULL
     len = 1000
-    fill_cdf = rgb(0, 0.3, 0.8, 0.25)
-    digits = 2
-    lty_density = 2
+
+    fill_lower = rgb(0, 0.3, 0.8, 0.25)
+    fill_middle = rgb(0, 0, 0, 0)
+    fill_upper = rgb(0, 0.3, 0.8, 0.25)
+
     x_lab = "t"
     y_lab = "f(x)"
     t_crit = 0.05
@@ -582,8 +505,6 @@ plot_t_tails = function(
   if (is.null(xmin)) xmin = -3
   if (is.null(xmax)) xmax =  3
 
-
-
   t_dat = build_dt_dat(
     df_sample = df_sample,
     ncp_sample = ncp_sample,
@@ -591,38 +512,68 @@ plot_t_tails = function(
     xmax = xmax,
     len = len)
 
+  lower_crit = upper_crit = NULL
 
+  if (!is.null(upper_tail))
+    upper_crit = qt(upper_tail, df = df_sample, ncp = ncp_sample)
 
+  if (!is.null(lower_tail))
+    lower_crit = qt(lower_tail, df = df_sample, ncp = ncp_sample)
 
+  ribbon_dat = build_tail_dat(
+    t_dat,
+    lower = lower_crit,
+    upper = upper_crit)
 
-  if(is.null(lower_tail))
-  {
-    ribbon_lower = NULL
-  } else
-  {
-    ribbon_lower =
-      geom_ribbon(
-        data = subset(t_dat, x < qt(lower_tail, df = df_sample, ncp = ncp_sample)),
-        mapping = aes(x = x, ymin = y0, ymax = y1),
-        fill = fill_cdf)
-  }
+  gg_ribbons = build_ribbons(
+    ribbon_dat,
+    fill_lower = fill_lower,
+    fill_middle = fill_middle,
+    fill_upper = fill_upper)
 
-  if(is.null(upper_tail))
-  {
-    ribbon_upper = NULL
-  } else
-  {
-    ribbon_upper =
-      geom_ribbon(
-        data = subset(t_dat, x > qt(upper_tail, df = df_sample, ncp = ncp_sample)),
-        mapping = aes(x = x, ymin = y0, ymax = y1),
-        fill = fill_cdf)
-  }
-
-  ggplot(t_dat) +
-    geom_line(aes(x, y1)) +
-    ribbon_upper +
-    ribbon_lower
+  # ggplot(t_dat) +
+  #   geom_line(aes(x, y1)) +
+  #   gg_ribbons$middle +
+  #   gg_ribbons$tails$upper +
+  #   gg_ribbons$tails$lower
+  #
+  #
+  #
+  #
+  #   ylab(y_lab) + xlab(x_lab)
+  #
+  #
+  # if(is.null(lower_tail))
+  # {
+  #   ribbon_lower = NULL
+  # } else
+  # {
+  #   ribbon_lower =
+  #     geom_ribbon(
+  #       data = subset(t_dat, x < qt(lower_tail, df = df_sample, ncp = ncp_sample)),
+  #       mapping = aes(x = x, ymin = y0, ymax = y1),
+  #       fill = fill_cdf)
+  # }
+  #
+  #
+  #
+  #
+  # if(is.null(upper_tail))
+  # {
+  #   ribbon_upper = NULL
+  # } else
+  # {
+  #   ribbon_upper =
+  #     geom_ribbon(
+  #       data = subset(t_dat, x > qt(upper_tail, df = df_sample, ncp = ncp_sample)),
+  #       mapping = aes(x = x, ymin = y0, ymax = y1),
+  #       fill = fill_cdf)
+  # }
+  #
+  # ggplot(t_dat) +
+  #   geom_line(aes(x, y1)) +
+  #   ribbon_upper +
+  #   ribbon_lower
   return(
     ggplot(t_dat) +
       geom_line(aes(x, y1)) +
@@ -651,20 +602,13 @@ build_tail_dat = function(dat, lower_x = -1.96, upper_x = NULL)
   }
 
   middle_dat = dat
-  lower_dat = NULL
-  upper_dat = NULL
-
+  lower_dat = upper_dat = NULL
 
   if (!is.null(lower_x))
   {
     lower_dat = subset(dat, x < lower_x)
     middle_dat = subset(middle_dat, x > lower_x)
   }
-
-
-  head(lower_dat)
-  tail(lower_dat)
-
 
   if (!is.null(upper_x))
   {
@@ -675,4 +619,47 @@ build_tail_dat = function(dat, lower_x = -1.96, upper_x = NULL)
   return(
     list(tails = list(lower = lower_dat, upper = upper_dat), middle = middle_dat)
   )
+}
+
+
+#'
+#'
+#'
+#'
+#' @export
+build_ribbons = function(
+  ribbon_dat,
+  fill_upper, fill_lower, fill_middle,
+  col_lower = "black", col_middle = "black", col_upper = "black")
+{
+  if(is.null(ribbon_dat$tails$lower))
+  {
+    ribbon_lower = NULL
+  } else
+  {
+    ribbon_lower =
+      geom_ribbon(
+        data = ribbon_dat$tails$lower,
+        mapping = aes(x = x, ymin = y0, ymax = y1),
+        fill = fill_lower)
+  }
+  if(is.null(ribbon_dat$tails$upper))
+  {
+    ribbon_upper = NULL
+  } else
+  {
+    ribbon_upper =
+      geom_ribbon(
+        data = ribbon_dat$tails$upper,
+        mapping = aes(x = x, ymin = y0, ymax = y1),
+        fill = fill_upper)
+  }
+
+  ribbon_middle =
+    geom_ribbon(
+      data = ribbon_dat$middle,
+      mapping = aes(x = x, ymin = y0, ymax = y1),
+      fill = fill_middle)
+
+  return(list(tails = list(lower = ribbon_lower, upper = ribbon_upper), middle = ribbon_middle))
 }
