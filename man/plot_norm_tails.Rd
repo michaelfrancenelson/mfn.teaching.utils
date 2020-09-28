@@ -6,7 +6,7 @@
 \usage{
 plot_norm_tails(
   lower_tail = 0.025,
-  upper_tail = 0.925,
+  upper_tail = 0.975,
   pop_mean = 0,
   pop_sd = 1,
   xmin = NULL,

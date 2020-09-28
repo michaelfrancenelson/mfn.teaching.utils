@@ -373,7 +373,7 @@ build_pnorm_dat = function(
 
 plot_norm_tails = function(
   lower_tail = 0.025,
-  upper_tail = 0.925,
+  upper_tail = 0.975,
   pop_mean = 0,
   pop_sd = 1,
   xmin = NULL,
@@ -478,7 +478,7 @@ plot_t_tails = function(
   if (FALSE)
   {
     lower_tail = 0.05
-    upper_tail = 0.925
+    upper_tail = 0.975
     upper_tail = NULL
 
     df_sample = 30
@@ -531,54 +531,13 @@ plot_t_tails = function(
     fill_middle = fill_middle,
     fill_upper = fill_upper)
 
-  # ggplot(t_dat) +
-  #   geom_line(aes(x, y1)) +
-  #   gg_ribbons$middle +
-  #   gg_ribbons$tails$upper +
-  #   gg_ribbons$tails$lower
-  #
-  #
-  #
-  #
-  #   ylab(y_lab) + xlab(x_lab)
-  #
-  #
-  # if(is.null(lower_tail))
-  # {
-  #   ribbon_lower = NULL
-  # } else
-  # {
-  #   ribbon_lower =
-  #     geom_ribbon(
-  #       data = subset(t_dat, x < qt(lower_tail, df = df_sample, ncp = ncp_sample)),
-  #       mapping = aes(x = x, ymin = y0, ymax = y1),
-  #       fill = fill_cdf)
-  # }
-  #
-  #
-  #
-  #
-  # if(is.null(upper_tail))
-  # {
-  #   ribbon_upper = NULL
-  # } else
-  # {
-  #   ribbon_upper =
-  #     geom_ribbon(
-  #       data = subset(t_dat, x > qt(upper_tail, df = df_sample, ncp = ncp_sample)),
-  #       mapping = aes(x = x, ymin = y0, ymax = y1),
-  #       fill = fill_cdf)
-  # }
-  #
-  # ggplot(t_dat) +
-  #   geom_line(aes(x, y1)) +
-  #   ribbon_upper +
-  #   ribbon_lower
   return(
+
     ggplot(t_dat) +
       geom_line(aes(x, y1)) +
-      ribbon_upper +
-      ribbon_lower +
+      gg_ribbons$middle +
+      gg_ribbons$tails$lower +
+      gg_ribbons$tails$upper +
       ylab(y_lab) + xlab(x_lab)
   )
 }
@@ -617,7 +576,9 @@ build_tail_dat = function(dat, lower_x = -1.96, upper_x = NULL)
   }
 
   return(
-    list(tails = list(lower = lower_dat, upper = upper_dat), middle = middle_dat)
+    list(
+      tails = list(lower = lower_dat, upper = upper_dat),
+      middle = middle_dat)
   )
 }
 
@@ -661,5 +622,7 @@ build_ribbons = function(
       mapping = aes(x = x, ymin = y0, ymax = y1),
       fill = fill_middle)
 
-  return(list(tails = list(lower = ribbon_lower, upper = ribbon_upper), middle = ribbon_middle))
+  return(list(
+    tails = list(lower = ribbon_lower, upper = ribbon_upper),
+    middle = ribbon_middle))
 }
