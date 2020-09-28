@@ -17,23 +17,26 @@ seed_pilfer_simulator = function(
   species_names = NULL)
 {
 
+
   # Assign species names if they weren't provided
   if (is.null(species_names))
     species_names = sprintf(
       "species_%0.2d",
-      1:length_n_stations)
-
+      1:length(n_stations))
   if (FALSE)
   {
     n_simulations = 5
     n_stations = c(700, 300)
-    pilfer_rates = c(0.2, 0.2)
+    pilfer_rates = c(0.2, 0.5)
     species_names = c("pol", "psd")
     i = 1
   }
 
   # Empty data frame to hold results
-  dat_out = data.frame()
+  # dat_out = data.frame(matrix(0, nrow = n_simulations * length(species_names)), ncol = )
+dat_out = data.frame(row.names = NULL)
+
+
 
   for (i in 1:length(n_stations))
   {
@@ -49,13 +52,29 @@ seed_pilfer_simulator = function(
         species    = species_names[i],
         n_pilfered = pilfered_i,
         n_intact   = n_stations[i] - pilfered_i,
-        n_total    = n_stations[i])
+        n_total    = n_stations[i], row.names = NULL)
 
-    dat_i$pilfer_rate = dat_i$n_pilfered / dat_i$n_total
-    dat_i$pilfer_odds = dat_i$n_pilfered / dat_i$n_intact
+    # dat_i =
+    #   data.frame(
+    #     simulation = 1:n_simulations,
+    #     species    = species_names[i],
+    #     n_pilfered = pilfered_i,
+    #     n_intact   = n_stations[i] - pilfered_i,
+    #     n_total    = n_stations[i])
+
+    # dat_i$pilfer_rate = dat_i$n_pilfered / dat_i$n_total
+    # dat_i$pilfer_odds = dat_i$n_pilfered / dat_i$n_intact
 
     dat_out = rbind(dat_out, dat_i)
   }
+
+
+dat_out$pilfer_rate = dat_out$n_pilfered / dat_out$n_total
+dat_out$pilfer_odds = dat_out$n_pilfered / dat_out$n_intact
+
+  # dat_i$pilfer_rate = dat_i$n_pilfered / dat_i$n_total
+  # dat_i$pilfer_odds = dat_i$n_pilfered / dat_i$n_intact
+
 
   # Sort the data in ascending order of simulation number and species:
   return(dat_out[order(dat_out$simulation, dat_out$species), ])

@@ -27,7 +27,8 @@ norm_density_plot = function(
   xmin = NULL,
   xmax = NULL,
   len = 1000,
-  fill_cdf = rgb(0, 0.3, 0.8, 0.15),
+  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
+  fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   x_lab = "x",
@@ -39,6 +40,25 @@ norm_density_plot = function(
       "cumulative density (area of shaded region) = %3$s"))
 {
 
+  if (FALSE)
+  {
+    # x_1 = 0.1
+    # pop_mean = 0
+    # pop_sd = 1
+    # xmin = NULL
+    # xmax = NULL
+    # len = 1000
+    # fill_cdf = rgb(0, 0.3, 0.8, 0.25)
+    # digits = 2
+    # lty_density = 2
+    # x_lab = "x"
+    # y_lab = "f(x)"
+    # title_fmt =
+    #   paste0(
+    #     "x = %1$s\n",
+    #     "probability density (height of the curve at x) = %2$s\n",
+    #     "cumulative density (area of shaded region) = %3$s")
+  }
 
   if (is.null(xmin)) xmin = pop_mean - 3 * pop_sd
   if (is.null(xmax)) xmax = pop_mean + 3 * pop_sd
@@ -50,7 +70,7 @@ norm_density_plot = function(
     pop_mean = pop_mean,
     pop_sd = pop_sd)
 
-  y_intercept = pnorm(x_1, mean = pop_mean, sd = pop_sd)
+  y_intercept = dnorm(x_1, mean = pop_mean, sd = pop_sd)
 
   return(
     ggplot(norm_dat) +
@@ -101,7 +121,8 @@ norm_cdf_plot = function(
   xmin = NULL,
   xmax = NULL,
   len = 1000,
-  fill_cdf = rgb(0, 0.3, 0.8, 0.15),
+  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
+  fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   x_lab = "x",
@@ -210,7 +231,8 @@ norm_quantile_plot = function(
   xmin = 0.001,
   xmax = 0.999,
   len = 1000,
-  fill_cdf = rgb(0, 0.3, 0.8, 0.15),
+  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
+  fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   y_lab = "x",
@@ -274,6 +296,32 @@ build_dnorm_dat = function(
   return(norm_dat)
 }
 
+
+
+
+#'
+#'
+#'
+#'
+#' @export
+#'
+build_dt_dat = function(
+  df_sample,
+  ncp_sample,
+  xmin,
+  xmax,
+  len
+)
+{
+  x = seq(xmin, xmax, length.out = len)
+  t_dat = data.frame(
+    x = x,
+    y0 = 0 * x,
+    y1 = dt(x, df = df_sample, ncp = ncp_sample)
+  )
+  return(t_dat)
+}
+
 #'
 #'
 #' @export
@@ -307,11 +355,324 @@ build_pnorm_dat = function(
   pop_sd
 )
 {
-    x = seq(xmin, xmax, length.out = len)
+  x = seq(xmin, xmax, length.out = len)
   norm_dat = data.frame(
     x = x,
     y0 = 0 * x,
     y1 = pnorm(x, mean = pop_mean, sd = pop_sd)
   )
   return(norm_dat)
+}
+
+
+#' Plot a normal distribution with one or both tails shaded
+#'
+#'
+#' @export
+
+plot_norm_tails = function(
+  lower_tail = 0.025,
+  upper_tail = 0.925,
+  pop_mean = 0,
+  pop_sd = 1,
+  xmin = NULL,
+  xmax = NULL,
+  len = 1000,
+  fill_cdf_upper = rgb(0, 0.3, 0.8, 0.25),
+  fill_cdf_lower = rgb(0, 0.3, 0.8, 0.25),
+  fill_middle = rgb(0, 0, 0, 0),
+  # digits = 2,
+  # lty_density = 2,
+  y_lab = "f(x)",
+  x_lab = "x"
+
+)
+{
+
+  if (FALSE)
+  {
+    lower_tail = 0.05
+    upper_tail = 0.925
+    upper_tail = NULL
+    x_1 = 0.1
+    pop_mean = 0
+    pop_sd = 1
+    xmin = NULL
+    xmax = NULL
+    len = 1000
+    fill_cdf_upper = rgb(0, 0.3, 0.8, 0.25)
+    fill_cdf_lower = rgb(0, 0.3, 0.8, 0.25)
+    fill_middle = rgb(0, 0, 0, 0)
+    digits = 2
+    lty_density = 2
+    x_lab = "x"
+    y_lab = "f(x)"
+    title_fmt =
+      paste0(
+        "x = %1$s\n",
+        "probability density (height of the curve at x) = %2$s\n",
+        "cumulative density (area of shaded region) = %3$s")
+  }
+
+  if (is.null(xmin)) xmin = pop_mean - 3 * pop_sd
+  if (is.null(xmax)) xmax = pop_mean + 3 * pop_sd
+
+  norm_dat = build_dnorm_dat(
+    xmin = xmin,
+    xmax = xmax,
+    len = len,
+    pop_mean = pop_mean,
+    pop_sd = pop_sd)
+
+
+  lower_crit = upper_crit = NULL
+
+  if (!is.null(upper_tail))
+    upper_crit = qnorm(upper_tail, mean = pop_mean, sd = pop_sd)
+
+  if (!is.null(lower_tail))
+    lower_crit = qnorm(lower_tail, mean = pop_mean, sd = pop_sd)
+
+  ribbon_dat = build_tail_dat(norm_dat, lower = lower_crit, upper = upper_crit)
+
+  # ribbon_dat = build_tail_dat(norm_dat)
+
+
+
+
+  head(ribbon_dat$tails$upper)
+
+  if(is.null(lower_tail))
+  {
+    ribbon_lower = NULL
+  } else
+  {
+    ribbon_lower =
+      geom_ribbon(
+        data = ribbon_dat$tails$lower,
+        mapping = aes(x = x, ymin = y0, ymax = y1),
+        fill = fill_cdf_lower)
+  }
+
+  if(is.null(upper_tail))
+  {
+    ribbon_upper = NULL
+  } else
+  {
+    ribbon_upper =
+      geom_ribbon(
+        data = ribbon_dat$tails$upper,
+        mapping = aes(x = x, ymin = y0, ymax = y1),
+        fill = fill_cdf_upper)
+  }
+
+
+  ribbon_middle =
+    geom_ribbon(
+      data = ribbon_dat$middle,
+      mapping = aes(x = x, ymin = y0, ymax = y1),
+      fill = fill_middle)
+
+
+
+
+
+  tail(ribbon_dat$tails$lower)
+  head(ribbon_dat$tails$lower)
+  head(ribbon_dat$middle)
+
+  # }
+  ggplot(norm_dat) +
+    geom_line(aes(x, y1)) +
+    ribbon_middle
+    # ribbon_upper +
+    # ribbon_lower
+
+
+  # if(is.null(lower_tail))
+  # {
+  #   ribbon_lower = NULL
+  # } else
+  # {
+  #   ribbon_lower =
+  #     geom_ribbon(
+  #       data = subset(norm_dat, x < qnorm(lower_tail)),
+  #       mapping = aes(x = x, ymin = y0, ymax = y1),
+  #       fill = fill_cdf)
+  # }
+
+  # if(is.null(upper_tail))
+  # {
+  #   ribbon_upper = NULL
+  # } else
+  # {
+  #   ribbon_upper =
+  #     geom_ribbon(
+  #       data = subset(norm_dat, x > qnorm(upper_tail)),
+  #       mapping = aes(x = x, ymin = y0, ymax = y1),
+  #       fill = fill_cdf)
+  # }
+  ggplot(norm_dat) +
+    geom_line(aes(x, y1)) +
+    ribbon_upper +
+    ribbon_lower
+  return(
+    ggplot(norm_dat) +
+      geom_line(aes(x, y1)) +
+      ribbon_upper +
+      ribbon_lower +
+      ribbon_middle +
+      ylab(y_lab) + xlab(x_lab)
+  )
+}
+
+
+#' Plot a t distribution with one or both tails shaded
+#'
+#'
+#' @export
+
+plot_t_tails = function(
+  lower_tail = 0.025,
+  upper_tail = 0.925,
+  df_sample = 30,
+  ncp_sample = 0,
+  # pop_mean = 0,
+  # pop_sd = 1,
+  xmin = NULL,
+  xmax = NULL,
+  len = 1000,
+  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
+  fill_bkg = rgb(0, 0, 0, 0),
+  # digits = 2,
+  # lty_density = 2,
+  y_lab = "f(x)",
+  x_lab = "x",
+  t_crit = 0.05
+
+)
+{
+
+  if (FALSE)
+  {
+    lower_tail = 0.05
+    upper_tail = 0.925
+    df_sample = 30
+    ncp_sample = 0
+    upper_tail = NULL
+    x_1 = 0.1
+    pop_mean = 0
+    pop_sd = 1
+    xmin = NULL
+    xmax = NULL
+    len = 1000
+    fill_cdf = rgb(0, 0.3, 0.8, 0.25)
+    digits = 2
+    lty_density = 2
+    x_lab = "t"
+    y_lab = "f(x)"
+    t_crit = 0.05
+    title_fmt =
+      paste0(
+        "x = %1$s\n",
+        "probability density (height of the curve at x) = %2$s\n",
+        "cumulative density (area of shaded region) = %3$s")
+  }
+
+  if (is.null(xmin)) xmin = -3
+  if (is.null(xmax)) xmax =  3
+
+
+
+  t_dat = build_dt_dat(
+    df_sample = df_sample,
+    ncp_sample = ncp_sample,
+    xmin = xmin,
+    xmax = xmax,
+    len = len)
+
+
+
+
+
+  if(is.null(lower_tail))
+  {
+    ribbon_lower = NULL
+  } else
+  {
+    ribbon_lower =
+      geom_ribbon(
+        data = subset(t_dat, x < qt(lower_tail, df = df_sample, ncp = ncp_sample)),
+        mapping = aes(x = x, ymin = y0, ymax = y1),
+        fill = fill_cdf)
+  }
+
+  if(is.null(upper_tail))
+  {
+    ribbon_upper = NULL
+  } else
+  {
+    ribbon_upper =
+      geom_ribbon(
+        data = subset(t_dat, x > qt(upper_tail, df = df_sample, ncp = ncp_sample)),
+        mapping = aes(x = x, ymin = y0, ymax = y1),
+        fill = fill_cdf)
+  }
+
+  ggplot(t_dat) +
+    geom_line(aes(x, y1)) +
+    ribbon_upper +
+    ribbon_lower
+  return(
+    ggplot(t_dat) +
+      geom_line(aes(x, y1)) +
+      ribbon_upper +
+      ribbon_lower +
+      ylab(y_lab) + xlab(x_lab)
+  )
+}
+
+
+
+#'
+#'
+#'
+#'
+#' @export
+
+build_tail_dat = function(dat, lower_x = -1.96, upper_x = NULL)
+{
+  if (FALSE)
+  {
+    dat = build_dnorm_dat(-3, 3, 1000, 0, 1)
+    lower_x = -1.96
+    upper_x = 1
+    upper_x = NULL
+  }
+
+  middle_dat = dat
+  lower_dat = NULL
+  upper_dat = NULL
+
+
+  if (!is.null(lower_x))
+  {
+    lower_dat = subset(dat, x < lower_x)
+    middle_dat = subset(middle_dat, x > lower_x)
+  }
+
+
+  head(lower_dat)
+  tail(lower_dat)
+
+
+  if (!is.null(upper_x))
+  {
+    upper_dat = subset(dat, x > upper_x)
+    middle_dat = subset(middle_dat, x < upper_x)
+  }
+
+  return(
+    list(tails = list(lower = lower_dat, upper = upper_dat), middle = middle_dat)
+  )
 }
