@@ -18,7 +18,7 @@ gg_norm_conf_int(
   x_lab = "x",
   lty_v = 2,
   title_fmt = "Interval contains \%.1f\%s of probabiltiy density.",
-  arrow_label_fmt = "$\%1$0.2f \\\\pm \%2$0.2f \\\\times \\\\sigma$",
+  arrow_label_fmt = "$\%1$0.1f \\\\pm \%2$0.2f \\\\times \\\\sigma$",
   arrow_size = 0.3,
   digits_label = 0,
   digits_axis = 3,

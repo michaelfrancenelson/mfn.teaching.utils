@@ -15,16 +15,20 @@ sample_standard_error = function(
   x,
   pop_sd = NULL)
 {
-  sample_mean = mean(x)
-  sample_sd   = sd(x)
+  sample_mean = mean(x, na.rm = TRUE)
+  sample_sd   = sd(x, na.rm = TRUE)
 
   sample_sd =
     ifelse(
-      !is.null(pop_sd),
-      pop_sd,
-      sd(x)
+      is.null(pop_sd),
+      sd(x, na.rm = TRUE),
+      pop_sd
     )
 
-  sample_se   = sample_sd / sqrt(length(x))
+  # must adjust sample size for missing data
+  n = sum(!is.na(x))
+
+
+    sample_se   = sample_sd / sqrt(n)
   return(sample_se)
 }
