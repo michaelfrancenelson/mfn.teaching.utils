@@ -626,3 +626,80 @@ build_ribbons = function(
     tails = list(lower = ribbon_lower, upper = ribbon_upper),
     middle = ribbon_middle))
 }
+
+#' Plot a confidence interval on a normal curve
+#'
+#' @import ggplot2
+#' @import latex2exp
+#' @export
+#'
+gg_norm_conf_int = function(
+  alpha = 0.05,
+  pop_mean = 0,
+  pop_sd = 1,
+  xmin = NULL,
+  xmax = NULL,
+  len = 1000,
+  fill_upper = rgb(0, 0.3, 0.8, 0.25),
+  fill_lower = rgb(0, 0.3, 0.8, 0.25),
+  fill_middle = rgb(0, 0, 0, 0),
+  y_lab = "f(x)",
+  x_lab = "x",
+  lty_v = 2,
+  title_fmt = "Interval contains %.1f%s of probabiltiy density.",
+  arrow_label_fmt = "$%1$0.1f \\pm %2$0.2f \\times \\sigma$",
+  arrow_size = 0.3,
+  digits_label = 0,
+  digits_axis = 3,
+  x_auto_breaks = -1:1
+)
+{
+  # Convenience variables
+  {
+    pct_interval = round(100 * (1 - alpha), digits = digits_label)
+    alpha_low = alpha / 2
+    alpha_hi = 1 - alpha / 2
+    q_low = qnorm(alpha_low)
+    q_hi = qnorm(alpha_hi)
+    y_intercept = dnorm(q_low)
+  }
+
+  g_title = sprintf(title_fmt, pct_interval, "%")
+  g_arrow_label = TeX(sprintf(arrow_label_fmt, pop_mean, abs(q_low)))
+
+  x_breaks = c(round(q_low, digits_axis), round(q_hi, digits_axis), x_auto_breaks)
+
+  arrow_dat = data.frame(
+    x = q_low,
+    xend = q_hi,
+    y = y_intercept,
+    yend = y_intercept)
+
+  gg_t = plot_norm_tails(
+    lower_tail = alpha_low,
+    upper_tail = alpha_hi,
+    pop_mean = pop_mean,
+    pop_sd = pop_sd,
+    xmin = xmin,
+    xmax = xmax,
+    len = len,
+    fill_middle = rgb(0, 0.3, 0.8, 0.25),
+    fill_lower = rgb(.7, 0, 0, 0.3),
+    fill_upper = rgb(.7, 0, 0, 0.3),
+    y_lab = y_lab,
+    x_lab = x_lab
+  )
+
+  gg_t +
+    geom_vline(xintercept = q_low, lty = lty_v) +
+    geom_vline(xintercept = q_hi, lty = lty_v) +
+    geom_segment(
+      data = arrow_dat, mapping = aes(x = x, xend = xend, y = y, yend = yend),
+      arrow = arrow(length=unit(arrow_size ,"cm"), ends="both", type = "closed")) +
+    ylab(y_lab) + xlab(x_lab) +
+    scale_x_continuous(breaks = x_breaks) +
+    ggtitle(g_title) +
+    annotate("label", x = 0, y = arrow_dat$y, label = g_arrow_label)
+
+
+}

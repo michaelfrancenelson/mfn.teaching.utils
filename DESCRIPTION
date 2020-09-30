@@ -15,4 +15,6 @@ Imports:
   ggplot2,
   utils,
   stats,
-  grDevices
+  grDevices,
+  latex2exp
+  
