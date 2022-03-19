@@ -1,4 +1,9 @@
-#' Calibrate a linear function from a point and slope
+#' Parameterize a linear function from a point and slope
+#'
+#' @param x x-values for which to calculate corresponding y-values
+#' @param x1 known x coordinate
+#' @param y1 known y coordinate
+#' @param slope known slope
 #'
 #'
 #' @export

@@ -14,8 +14,10 @@
 #' @param title_fmt The format string, to be passed to sprintf() for the title
 #'
 #' @import ggplot2
+#' @import stats
 #'
 #' @return A ggplot object
+#'
 #'
 #' @export
 #'
@@ -28,7 +30,7 @@ norm_density_plot = function(
   xmax = NULL,
   len = 1000,
   fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  fill_bkg = rgb(0, 0, 0, 0),
+  # fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   x_lab = "x",
@@ -42,22 +44,22 @@ norm_density_plot = function(
 
   if (FALSE)
   {
-    # x_1 = 0.1
-    # pop_mean = 0
-    # pop_sd = 1
-    # xmin = NULL
-    # xmax = NULL
-    # len = 1000
-    # fill_cdf = rgb(0, 0.3, 0.8, 0.25)
-    # digits = 2
-    # lty_density = 2
-    # x_lab = "x"
-    # y_lab = "f(x)"
-    # title_fmt =
-    #   paste0(
-    #     "x = %1$s\n",
-    #     "probability density (height of the curve at x) = %2$s\n",
-    #     "cumulative density (area of shaded region) = %3$s")
+    x_1 = 0.1
+    pop_mean = 0
+    pop_sd = 1
+    xmin = NULL
+    xmax = NULL
+    len = 1000
+    fill_cdf = rgb(0, 0.3, 0.8, 0.25)
+    digits = 2
+    lty_density = 2
+    x_lab = "x"
+    y_lab = "f(x)"
+    title_fmt =
+      paste0(
+        "x = %1$s\n",
+        "probability density (height of the curve at x) = %2$s\n",
+        "cumulative density (area of shaded region) = %3$s")
   }
 
   if (is.null(xmin)) xmin = pop_mean - 3 * pop_sd
@@ -72,23 +74,23 @@ norm_density_plot = function(
 
   y_intercept = dnorm(x_1, mean = pop_mean, sd = pop_sd)
 
-  return(
-    ggplot(norm_dat) +
-      geom_line(aes(x, y1)) +
-      geom_ribbon(
-        data = subset(norm_dat, x < x_1),
-        mapping = aes(x = x, ymin = y0, ymax = y1),
-        fill = fill_cdf) +
-      geom_hline(yintercept = y_intercept, lty = lty_density) +
-      ylab(y_lab) + xlab(x_lab) +
-      ggtitle(paste0(
-        sprintf(
-          title_fmt,
-          round(x_1, digits),
-          round(y_intercept, digits),
-          round(pnorm(x_1, mean = pop_mean, sd = pop_sd), digits)
-        )))
-  )
+  out =  ggplot(norm_dat) +
+    geom_line(aes(x, y1)) +
+    geom_ribbon(
+      data = subset(norm_dat, x < x_1),
+      mapping = aes(x = x, ymin = y0, ymax = y1),
+      fill = fill_cdf) +
+    geom_hline(yintercept = y_intercept, lty = lty_density) +
+    ylab(y_lab) + xlab(x_lab) +
+    ggtitle(paste0(
+      sprintf(
+        title_fmt,
+        round(x_1, digits),
+        round(y_intercept, digits),
+        round(pnorm(x_1, mean = pop_mean, sd = pop_sd), digits)
+      )))
+
+  return(out)
 }
 
 
@@ -108,6 +110,7 @@ norm_density_plot = function(
 #' @param title_fmt The format string, to be passed to sprintf() for the title
 #'
 #' @import ggplot2
+#' @import stats
 #'
 #' @return A ggplot object
 #'
@@ -122,7 +125,7 @@ norm_cdf_plot = function(
   xmax = NULL,
   len = 1000,
   fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  fill_bkg = rgb(0, 0, 0, 0),
+  # fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   x_lab = "x",
@@ -140,12 +143,6 @@ norm_cdf_plot = function(
     len = len,
     pop_mean = pop_mean,
     pop_sd = pop_sd)
-
-  # norm_dat = data.frame(
-  #   x = x1 <- seq(xmin, xmax, length.out = len),
-  #   y0 = 0 * x1,
-  #   y1 = pnorm(x1, mean =pop_mean, sd = pop_sd)
-  # ); rm(x1)
 
   y_intercept = pnorm(x_1, mean = pop_mean, sd = pop_sd)
 
@@ -201,9 +198,7 @@ if(FALSE)
 
 
 
-#'
 #' A nice demonstration plot of a normal quantile function
-#'
 #'
 #' @param p_1 p
 #' @param pop_mean mean of the normal distribution to plot
@@ -212,6 +207,7 @@ if(FALSE)
 #' @param xmax maximum x value for the plot
 #' @param len number of points to calculate for the curve
 #' @param fill_cdf Color to fill the density area
+#' @param fill_cdf Color to fill background
 #' @param x_lab label for the x-axis
 #' @param y_lab label for the y-axis
 #' @param digits the number of siginifcant digits to display in the title
@@ -219,6 +215,7 @@ if(FALSE)
 #' @param title_fmt The format string, to be passed to sprintf() for the title
 #'
 #' @import ggplot2
+#' @import stats
 #'
 #' @return A ggplot object
 #'
@@ -232,7 +229,7 @@ norm_quantile_plot = function(
   xmax = 0.999,
   len = 1000,
   fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  fill_bkg = rgb(0, 0, 0, 0),
+  # fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   y_lab = "x",
@@ -275,22 +272,39 @@ norm_quantile_plot = function(
 
 
 
-#' Build a pdf curve for a normal dist
+#' Build data for a pdf curve for a normal dist
+#'
+#' @param xmin minimum x-value
+#' @param xmax maximum x-value
+#' @param len how many points to create for the curve
+#' @param pop_mean mean for the population
+#' @param pop_sd standard deviation for the population
+#'
+#' @import stats
 #'
 #' @export
 #'
 
 build_dnorm_dat = function(
-  xmin,
-  xmax,
-  len,
-  pop_mean,
-  pop_sd
+  xmin = -2,
+  xmax = 2,
+  len = 100,
+  pop_mean = 0,
+  pop_sd = 1
 )
 {
+  if (FALSE)
+  {
+    xmin = -2
+    xmax = 2
+    len = 100
+    pop_mean = 0
+    pop_sd = 1
+  }
   x = seq(xmin, xmax, length.out = len)
   norm_dat = data.frame(
     x = x,
+    x1 = rev(x),
     y0 = 0 * x,
     y1 = dnorm(x, mean = pop_mean, sd = pop_sd)
   )
@@ -298,69 +312,64 @@ build_dnorm_dat = function(
 }
 
 
-
-
+#' Build data for a quantile curve for a normal dist
 #'
+#' @param xmin minimum x-value
+#' @param xmin minimum x-value
+#' @param xmax maximum x-value
+#' @param len how many points to create for the curve
+#' @param pop_mean mean for the population
+#' @param pop_sd standard deviation for the population
 #'
-#'
-#'
-#' @export
-#'
-build_dt_dat = function(
-  df_sample,
-  ncp_sample,
-  xmin,
-  xmax,
-  len
-)
-{
-  x = seq(xmin, xmax, length.out = len)
-  t_dat = data.frame(
-    x = x,
-    y0 = 0 * x,
-    y1 = dt(x, df = df_sample, ncp = ncp_sample)
-  )
-  return(t_dat)
-}
-
-#'
+#' @import stats
 #'
 #' @export
 #'
 build_qnorm_dat = function(
   xmin,
   xmax,
-  len,
-  pop_mean,
-  pop_sd
+  len = 100,
+  pop_mean = 0,
+  pop_sd = 1
 )
 {
   x = seq(xmin, xmax, length.out = len)
   norm_dat = data.frame(
     x = x,
     y0 = 0 * x,
-    y1 = qnorm(x, mean = pop_mean, sd = pop_sd)
+    y1 = qnorm(x, mean = pop_mean, sd = pop_sd),
+    x1 = rev(x)
   )
   return(norm_dat)
 }
 
+#' Build data for a cdf curve for a normal dist
 #'
+#' @param xmin minimum x-value
+#' @param xmin minimum x-value
+#' @param xmax maximum x-value
+#' @param len how many points to create for the curve
+#' @param pop_mean mean for the population
+#' @param pop_sd standard deviation for the population
+#'
+#' @import stats
 #'
 #' @export
 #'
 build_pnorm_dat = function(
-  xmin,
-  xmax,
-  len,
-  pop_mean,
-  pop_sd
+  xmin = -2,
+  xmax = 2,
+  len = 100,
+  pop_mean = 0,
+  pop_sd = 1
 )
 {
   x = seq(xmin, xmax, length.out = len)
   norm_dat = data.frame(
     x = x,
     y0 = 0 * x,
-    y1 = pnorm(x, mean = pop_mean, sd = pop_sd)
+    y1 = pnorm(x, mean = pop_mean, sd = pop_sd),
+    x1 = rev(x)
   )
   return(norm_dat)
 }
@@ -368,6 +377,18 @@ build_pnorm_dat = function(
 
 #' Plot a normal distribution with one or both tails shaded
 #'
+#' @param lower_tail lower tail to plot
+#' @param upper_tail upper tail to plot
+#' @param pop_mean mean for the population
+#' @param pop_sd standard deviation for the plot
+#' @param xmin lower limit of x values to include
+#' @param xmax upper limit of x values to include
+#' @param len how many points to generate?
+#' @param fill_lower fill color for the lower tail
+#' @param fill_middle fill color for the non-tail part of the pdf
+#' @param fill_upper fill color for the upper tail
+#' @param y_lab label for x axis
+#' @param x_lab label for y axis
 #'
 #' @export
 
@@ -433,8 +454,9 @@ plot_norm_tails = function(
 
   ribbon_dat = build_tail_dat(
     norm_dat,
-    lower = lower_crit,
-    upper = upper_crit)
+    lower_x = lower_crit,
+    upper_x = upper_crit)
+
   gg_ribbons = build_ribbons(
     ribbon_dat,
     fill_lower = fill_lower,
@@ -452,7 +474,52 @@ plot_norm_tails = function(
 }
 
 
+#' Build data for a pdf curve for a t-distribution
+#'
+#' @param df_sample sample degrees of freedom
+#' @param ncp_sample non-centrality parameter
+#' @param xmin lower limit of x values to include
+#' @param xmax upper limit of x values to include
+#' @param len how many points to generate?
+#'
+#' @import stats
+#'
+#' @export
+#'
+build_dt_dat = function(
+  df_sample,
+  ncp_sample,
+  xmin,
+  xmax,
+  len
+)
+{
+  x = seq(xmin, xmax, length.out = len)
+  t_dat = data.frame(
+    x = x,
+    y0 = 0 * x,
+    y1 = dt(x, df = df_sample, ncp = ncp_sample)
+  )
+  return(t_dat)
+}
+
+
+
+
 #' Plot a t distribution with one or both tails shaded
+#'
+#' @param lower_tail lower tail to plot
+#' @param upper_tail upper tail to plot
+#' @param df_sample sample degrees of freedom
+#' @param ncp_sample non-centrality parameter
+#' @param xmin lower limit of x values to include
+#' @param xmax upper limit of x values to include
+#' @param len how many points to generate?
+#' @param fill_lower fill color for the lower tail
+#' @param fill_middle fill color for the non-tail part of the pdf
+#' @param fill_upper fill color for the upper tail
+#' @param y_lab label for x axis
+#' @param x_lab label for y axis
 #'
 #'
 #' @export
@@ -469,9 +536,8 @@ plot_t_tails = function(
   fill_middle = rgb(0, 0, 0, 0),
   fill_upper = rgb(0, 0.3, 0.8, 0.25),
   y_lab = "f(x)",
-  x_lab = "x",
-  t_crit = 0.05
-
+  x_lab = "x"#,
+  # t_crit = 0.05
 )
 {
 
@@ -522,8 +588,8 @@ plot_t_tails = function(
 
   ribbon_dat = build_tail_dat(
     t_dat,
-    lower = lower_crit,
-    upper = upper_crit)
+    lower_x = lower_crit,
+    upper_x = upper_crit)
 
   gg_ribbons = build_ribbons(
     ribbon_dat,
@@ -544,13 +610,19 @@ plot_t_tails = function(
 
 
 
+#' Separate the lower and upper tails for a pdf dataset
 #'
-#'
+#' @param dat data from which to build the tails
+#' @param lower_x lower x-limit for the tail
+#' @param upper_x upper x-limit for the tail
 #'
 #'
 #' @export
 
-build_tail_dat = function(dat, lower_x = -1.96, upper_x = NULL)
+build_tail_dat = function(
+  dat,
+  lower_x = -1.96,
+  upper_x = NULL)
 {
   if (FALSE)
   {
@@ -577,21 +649,37 @@ build_tail_dat = function(dat, lower_x = -1.96, upper_x = NULL)
 
   return(
     list(
-      tails = list(lower = lower_dat, upper = upper_dat),
+      tails = list(
+        lower = lower_dat,
+        upper = upper_dat),
       middle = middle_dat)
   )
 }
 
 
+#' Build geom_ribbon objects for plotting a continuous distribution function
 #'
+#' @param ribbon_dat data from which to beuld the ribbons
+#' @param fill_lower fill color for the lower tail
+#' @param fill_middle fill color for the non-tail part of the pdf
+#' @param fill_upper fill color for the upper tail
+#' @param col_lower border color for the lower tail
+#' @param col_middle border color for the non-tail part
+#' @param col_upper border color for the upper tail
 #'
-#'
+#' @import ggplot2
 #'
 #' @export
+
+
 build_ribbons = function(
   ribbon_dat,
-  fill_upper, fill_lower, fill_middle,
-  col_lower = "black", col_middle = "black", col_upper = "black")
+  fill_lower = rgb(0, 0.3, 0.8, 0.25),
+  fill_middle = rgb(0, 0, 0, 0),
+  fill_upper = rgb(0, 0.3, 0.8, 0.25),
+  col_lower = "black",
+  col_middle = "black",
+  col_upper = "black")
 {
   if(is.null(ribbon_dat$tails$lower))
   {
@@ -623,14 +711,38 @@ build_ribbons = function(
       fill = fill_middle)
 
   return(list(
-    tails = list(lower = ribbon_lower, upper = ribbon_upper),
-    middle = ribbon_middle))
+    tails = list(
+      lower = ribbon_lower,
+      upper = ribbon_upper),
+    middle = ribbon_middle),
+    lower = ribbon_lower,
+    upper = ribbon_upper)
 }
 
 #' Plot a confidence interval on a normal curve
 #'
+#' @param alpha alpha for the fill
+#' @param pop_mean mean for the pop
+#' @param pop_sd sd for the pop
+#' @param xmin min x
+#' @param xmax max s
+#' @param len how many points to make for the curve.  Higher number results in smoother curve
+#' @param fill_lower fill color for the lower tail
+#' @param fill_middle fill color for the non-tail part of the pdf
+#' @param fill_upper fill color for the upper tail
+#' @param y_lab labe for y axis
+#' @param x_lab label for x asxis
+#' @param lty_v line type for the upper and lower quantile limits
+#' @param title_fmt template for title
+#' @param arrow_label_fmt template for arrow lables
+#' @param arrow_size size for the horizontal arrow for the CI width label
+#' @param digits_label how many digits to round for the label
+#' @param digits_axis how many digits to round for the axes
+#' @param x_auto_breaks
+#'
 #' @import ggplot2
 #' @import latex2exp
+#'
 #' @export
 #'
 gg_norm_conf_int = function(
@@ -690,7 +802,8 @@ gg_norm_conf_int = function(
     x_lab = x_lab
   )
 
-  gg_t +
+  out =
+    gg_t +
     geom_vline(xintercept = q_low, lty = lty_v) +
     geom_vline(xintercept = q_hi, lty = lty_v) +
     geom_segment(
@@ -701,5 +814,5 @@ gg_norm_conf_int = function(
     ggtitle(g_title) +
     annotate("label", x = 0, y = arrow_dat$y, label = g_arrow_label)
 
-
+  return(out)
 }

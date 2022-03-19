@@ -12,7 +12,6 @@ norm_quantile_plot(
   xmax = 0.999,
   len = 1000,
   fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   y_lab = "x",
@@ -33,7 +32,7 @@ norm_quantile_plot(
 
 \item{len}{number of points to calculate for the curve}
 
-\item{fill_cdf}{Color to fill the density area}
+\item{fill_cdf}{Color to fill background}
 
 \item{digits}{the number of siginifcant digits to display in the title}
 

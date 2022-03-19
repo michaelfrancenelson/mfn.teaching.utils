@@ -1,5 +1,13 @@
 #' Add line segment representation of residuals using base graphics
 #'
+#' @param x x-values
+#' @param y_observed the observed y values
+#' @param y_expected the expected (model-based) y values
+#' @param lwd how wide should the residual lines be?
+#' @param lty What type of line should they be?
+#' @param col what color should they be?
+#'
+#' @import graphics
 #'
 #' @export
 

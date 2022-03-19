@@ -12,7 +12,6 @@ norm_cdf_plot(
   xmax = NULL,
   len = 1000,
   fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  fill_bkg = rgb(0, 0, 0, 0),
   digits = 2,
   lty_density = 2,
   x_lab = "x",

@@ -2,10 +2,19 @@
 % Please edit documentation in R/line_point_slope.R
 \name{line_point_slope}
 \alias{line_point_slope}
-\title{Calibrate a linear function from a point and slope}
+\title{Parameterize a linear function from a point and slope}
 \usage{
 line_point_slope(x, x1, y1, slope)
 }
+\arguments{
+\item{x}{x-values for which to calculate corresponding y-values}
+
+\item{x1}{known x coordinate}
+
+\item{y1}{known y coordinate}
+
+\item{slope}{known slope}
+}
 \description{
-Calibrate a linear function from a point and slope
+Parameterize a linear function from a point and slope
 }

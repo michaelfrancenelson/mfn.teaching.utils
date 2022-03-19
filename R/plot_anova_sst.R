@@ -3,10 +3,10 @@
 #' Add line segment representation of residuals using base graphics
 #'
 #' @param n_per_group how many observations in each group
-#' @param group_means
-#' @param group_sd
-#' @param cols
-#' @param pt_alpha
+#' @param group_means means for the cells (groups)
+#' @param group_sd sd for the groups
+#' @param cols colors for the groups
+#' @param pt_alpha how transparent shoudl the points be?
 #'
 #' @import data.table
 #'
@@ -15,7 +15,12 @@
 #' @export
 #'
 
-mk_ss_data = function(n_per_group, group_means, group_sd, cols = NULL, pt_alpha = 0.6)
+mk_ss_data = function(
+  n_per_group = 30,
+  group_means = c(2, 6, 4),
+  group_sd = 0.5,
+  cols = NULL,
+  pt_alpha = 0.6)
 {
   if (FALSE)
   {
@@ -26,7 +31,7 @@ mk_ss_data = function(n_per_group, group_means, group_sd, cols = NULL, pt_alpha 
     pt_alpha = 0.6
   }
 
-    if (length(n_per_group) > 1)
+  if (length(n_per_group) > 1)
   {
     stopifnot(
       length(n_per_group) == length(group_means)
@@ -45,7 +50,6 @@ mk_ss_data = function(n_per_group, group_means, group_sd, cols = NULL, pt_alpha 
 
   if (length(n_per_group) != length(group_means))
     n_per_group = rep(n_per_group, length(group_means))
-
 
   if(is.null(cols)) cols = 1:length(group_means)
 
@@ -70,6 +74,18 @@ mk_ss_data = function(n_per_group, group_means, group_sd, cols = NULL, pt_alpha 
 
 ss_par = function() par(oma = c(0,0,0,0),mar = c(1,3,2,.1))
 
+
+#' Overlay points for the sums of squares on a base R plot
+#'
+#' @param dat data for which to draw the points
+#' @param pt_cex size of the points
+#' @param lwd width of the point border
+#' @param pch_1 plotting character for main point
+#' @param pch_2 plotting character for border point
+#'
+#'
+
+
 ss_pts = function(
   dat,
   pt_cex = 1.5,
@@ -81,6 +97,10 @@ ss_pts = function(
   points(dat$y,pch = pch_2, col = dat$col, cex = pt_cex, lwd = lwd)
 }
 
+
+
+#'
+#'
 p1 = function(
   dat,
   ylab = "", xlab = "",
@@ -105,6 +125,25 @@ p1 = function(
 }
 
 
+#' Create a graphical representation of the total sum of squares in an ANOVA style analysis.
+#'
+#' @param dat data for which to draw.  If null, data with 3 groups will be generated
+#' @param seg_col color for the vertical line segments
+#' @param seg_lwd = width for vertical line segments
+#' @param grand_mean_col color for grand mean horizontal line
+#' @param group_mean_col line color for the vertical lines
+#' @param grand_mean_lwd line width for the grand mean horizontal line
+#' @param group_mean_lwd line width for the group mean colors
+#' @param seed random seed to be used if dat is NULL
+#' @param show_label whether or not to print the SS quantity
+#' @param label_fmt The text format for the sum of squares label (if )
+#' @param digits how many digits to round the SS to?
+#'
+#' @inheritParams ss_pts
+#'
+#' @import data.table
+#' @import grDevices
+#' @import graphics
 #'
 #' @return a data.table with columns for TODO
 #'
@@ -112,40 +151,110 @@ p1 = function(
 
 # total
 plot_anova_sst = function(
-  dat,
+  dat = NULL,
   seg_col = gray(0.75),
   seg_lwd = 1,
   group_mean_col = "black",
-  group_mean_lwd = 2)
+  group_mean_lwd = 2,
+  grand_mean_col = "black",
+  grand_mean_lwd = 2,
+  show_label = TRUE,
+  label_fmt = "SST = %0.1f",
+  label_cex = 1.3,
+  digits = 1,
+  pt_cex = 1.5,
+  pt_lwd = 0.5,
+  pch_1 = 16,
+  pch_2 = 1,
+  seed = 12345, ...)
 {
-  p1(dat)
+  if(is.null(dat))
+  {
+    set.seed(seed)
+    dat = mk_ss_data(cols = c(1, 2, 4))
+  }
+
+  p1(dat, grand_mean_col = grand_mean_col, grand_mean_lwd = grand_mean_lwd)
   dat[, segments(
     x0 = x, y0 = mean(y),
     x1 = x, y1 = y,
-    col = seg_col)]
+    col = seg_col,
+    lwd = seg_lwd)]
   dat[,
       segments(
         x0 = min(x), x1 = max(x),
         y0 = mean(y), y1 = mean(y),
         col = group_mean_col,
         lwd = group_mean_lwd)]
-  ss_pts(dat)
+  ss_pts(dat, pt_cex = pt_cex, lwd = pt_lwd, pch_1 = pch_1, pch_2 = pch_2)
+
+  if(show_label)
+  {
+    ss = calc_ss(dat, digits = digits)
+    mtext(text = sprintf(label_fmt, ss$sst), cex = label_cex)
+  }
+
 }
 
 
 
+#' Create a graphical representation of the within-group sum of squares in an ANOVA style analysis.
+#'
+#' @inheritParams plot_anova_sst
+#' @inheritParams ss_pts
+#'
+#' @import data.table
+#' @import grDevices
+#' @import graphics
+#'
 #' @export
-# ss within
+
 plot_anova_ssw = function(
-  dat,
+  dat = NULL,
   seg_col = gray(0.75),
-  group_mean_lwd = 2)
+  seg_lwd = 1,
+  group_mean_lwd = 2,
+  grand_mean_col = "black",
+  grand_mean_lwd = 2,
+  show_label = TRUE,
+  label_fmt = "SSW = %0.1f",
+  label_cex = 1.3,
+  digits = 1,
+  pt_cex = 1.5,
+  pt_lwd = 0.5,
+  pch_1 = 16,
+  pch_2 = 1,
+  seed = 12345)
 {
-  p1(dat)
+
+  if(is.null(dat))
+  {
+    set.seed(seed)
+    dat = mk_ss_data(cols = c(1, 2, 4))
+  }
+
+
+  if(FALSE)
+  {
+    dat = NULL
+    seg_col = gray(0.75)
+    seg_lwd = 1
+    group_mean_lwd = 2
+    grand_mean_col = "black"
+    grand_mean_lwd = 2
+    show_label = TRUE
+    label_fmt = "SSWS = %0.1f"
+    label_cex = 1.3
+    digits = 1
+    seed = 12345
+  }
+
+  p1(dat, grand_mean_col = grand_mean_col, grand_mean_lwd = grand_mean_lwd)
   dat[, segments(
     x0 = x, y0 = group_mean,
     x1 = x, y1 = y,
-    col = seg_col)]
+    col = seg_col,
+    lwd = seg_lwd)]
   dat[,
       segments(
         x0 = min(x), x1 = max(x),
@@ -153,24 +262,66 @@ plot_anova_ssw = function(
         col = col_mean[1],
         lwd = group_mean_lwd),
       by = group]
-  ss_pts(dat)
+  ss_pts(dat, pt_cex = pt_cex, lwd = pt_lwd, pch_1 = pch_1, pch_2 = pch_2)
+
+  if(show_label)
+  {
+    ss = calc_ss(dat, digits = digits)
+    mtext(text = sprintf(label_fmt, ss$ssw), cex = label_cex)
+  }
+
 }
 
+
+#' Create a graphical representation of the between-group sum of squares in an ANOVA style analysis.
+#'
+#' @inheritParams plot_anova_sst
+#' @inheritParams ss_pts
+#'
+#' @import data.table
+#' @import grDevices
+#' @import graphics
+#'
 #' @export
 
 plot_anova_ssb = function(
-  dat,
+  dat = NULL,
   seg_col = gray(0.75),
+  seg_lwd = 1,
   grand_mean_col = "black",
   grand_mean_lwd = 0.8,
-  group_mean_lwd = 2)
+  group_mean_lwd = 2,
+  show_label = TRUE,
+  label_fmt = "SSB = %0.1f",
+  label_cex = 1.3,
+  digits = 1,
+  pt_cex = 1.5,
+  pt_lwd = 0.5,
+  pch_1 = 16,
+  pch_2 = 1,
+  seed = 12345)
 {
-  p1(dat)
+
+
+  if(is.null(dat))
+  {
+    set.seed(seed)
+    dat = mk_ss_data(cols = c(1, 2, 4))
+  }
+
+  p1(dat, grand_mean_col = grand_mean_col, grand_mean_lwd = grand_mean_lwd)
+
+  if(show_label)
+  {
+    ss = calc_ss(dat, digits = digits)
+    mtext(text = sprintf(label_fmt, ss$ssb), cex = label_cex)
+  }
   dat[,
       segments(
         x0 = x, y0 = mean(y),
         x1 = x, y1 = group_mean,
-        col = seg_col)]
+        col = seg_col,
+        lwd = seg_lwd)]
   dat[,
       segments(
         x0 = min(x), x1 = max(x),
@@ -178,7 +329,7 @@ plot_anova_ssb = function(
         col = col_mean[1],
         lwd = group_mean_lwd),
       by = group]
-  ss_pts(dat)
+  ss_pts(dat, pt_cex = pt_cex, lwd = pt_lwd, pch_1 = pch_1, pch_2 = pch_2)
   dat[,
       segments(
         x0 = min(x), x1 = max(x),
@@ -188,6 +339,13 @@ plot_anova_ssb = function(
 
 }
 
+
+
+#' Calculate the various sums of squares
+#'
+#' @param dat data for which to calculate ss
+#' @param digits how many digits to round for the calculation?
+#'
 #' @export
 
 calc_ss = function(dat, digits = -1)
@@ -199,6 +357,13 @@ calc_ss = function(dat, digits = -1)
   ))
 }
 
+
+
+#' Calculate the various mean sums of squares
+#'
+#' @param dat data for which to calculate ss
+#' @param digits how many digits to round for the calculation?
+#'
 #' @export
 
 calc_ms = function(dat, digits = -1)
