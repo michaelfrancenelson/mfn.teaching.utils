@@ -25,6 +25,43 @@ gg_norm_conf_int(
   x_auto_breaks = -1:1
 )
 }
+\arguments{
+\item{alpha}{alpha for the fill}
+
+\item{pop_mean}{mean for the pop}
+
+\item{pop_sd}{sd for the pop}
+
+\item{xmin}{min x}
+
+\item{xmax}{max s}
+
+\item{len}{how many points to make for the curve.  Higher number results in smoother curve}
+
+\item{fill_upper}{fill color for the upper tail}
+
+\item{fill_lower}{fill color for the lower tail}
+
+\item{fill_middle}{fill color for the non-tail part of the pdf}
+
+\item{y_lab}{labe for y axis}
+
+\item{x_lab}{label for x asxis}
+
+\item{lty_v}{line type for the upper and lower quantile limits}
+
+\item{title_fmt}{template for title}
+
+\item{arrow_label_fmt}{template for arrow lables}
+
+\item{arrow_size}{size for the horizontal arrow for the CI width label}
+
+\item{digits_label}{how many digits to round for the label}
+
+\item{digits_axis}{how many digits to round for the axes}
+
+\item{x_auto_breaks}{}
+}
 \description{
 Plot a confidence interval on a normal curve
 }

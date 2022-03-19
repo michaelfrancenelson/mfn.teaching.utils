@@ -1,6 +1,5 @@
 #' Sample standard error of the mean
 #'
-#'
 #' @param x The data for which to calculate the SSE
 #' @param pop_sd population standard deviation
 #'
@@ -27,8 +26,6 @@ sample_standard_error = function(
 
   # must adjust sample size for missing data
   n = sum(!is.na(x))
-
-
-    sample_se   = sample_sd / sqrt(n)
+  sample_se   = sample_sd / sqrt(n)
   return(sample_se)
 }

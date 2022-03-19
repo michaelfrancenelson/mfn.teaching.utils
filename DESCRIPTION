@@ -1,11 +1,11 @@
 Package: mfn.teaching.utils
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.2.0
+Version: 0.3.0
 Author: Michael France Nelson
 Maintainer: The package maintainer <michaelfrancenelson@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Various helper functions for my teaching materials.
+    Mostly for creating plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -16,4 +16,5 @@ Imports:
   utils,
   stats,
   grDevices,
-  latex2exp
+  latex2exp,
+  data.table

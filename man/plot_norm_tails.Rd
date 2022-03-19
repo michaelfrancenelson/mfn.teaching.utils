@@ -19,6 +19,31 @@ plot_norm_tails(
   x_lab = "x"
 )
 }
+\arguments{
+\item{lower_tail}{lower tail to plot}
+
+\item{upper_tail}{upper tail to plot}
+
+\item{pop_mean}{mean for the population}
+
+\item{pop_sd}{standard deviation for the plot}
+
+\item{xmin}{lower limit of x values to include}
+
+\item{xmax}{upper limit of x values to include}
+
+\item{len}{how many points to generate?}
+
+\item{fill_lower}{fill color for the lower tail}
+
+\item{fill_middle}{fill color for the non-tail part of the pdf}
+
+\item{fill_upper}{fill color for the upper tail}
+
+\item{y_lab}{label for x axis}
+
+\item{x_lab}{label for y axis}
+}
 \description{
 Plot a normal distribution with one or both tails shaded
 }

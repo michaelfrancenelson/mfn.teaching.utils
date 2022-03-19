@@ -1,9 +1,12 @@
 
 
-# here is a example of section breaks
-
-
-# ---- section_1 ----
+#' Ricker function as specified in McGarigal's notes
+#'
+#' @param x x-values
+#' @param a scales the function
+#' @param b scales the exponent
+#'
+#' @export
 
 ricker_fun = function(x, a, b)
 {
@@ -12,10 +15,6 @@ ricker_fun = function(x, a, b)
 
 
 
-
-
-
-# ---- section_2 ----
 
 
 

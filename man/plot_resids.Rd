@@ -6,6 +6,19 @@
 \usage{
 plot_resids(x, y_observed, y_expected, lwd = 2, lty = 1, col = "red")
 }
+\arguments{
+\item{x}{x-values}
+
+\item{y_observed}{the observed y values}
+
+\item{y_expected}{the expected (model-based) y values}
+
+\item{lwd}{how wide should the residual lines be?}
+
+\item{lty}{What type of line should they be?}
+
+\item{col}{what color should they be?}
+}
 \description{
 Add line segment representation of residuals using base graphics
 }

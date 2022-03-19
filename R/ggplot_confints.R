@@ -9,6 +9,7 @@
 #' @param pop_mean Population
 #' @param pop_sd population standard deviation
 #'
+#' @import ggplot2
 #'
 #' @export
 
