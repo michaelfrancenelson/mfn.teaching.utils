@@ -21,7 +21,7 @@ plot_resids = function(
   # x = x[i], guess_x, guess_y, guess_slope),
   # y0 = line_point_slope(
   #   x = x[i], guess_x, guess_y, guess_slope),
-  for (i in 1:n)
+  for (i in 1:length(x))
   {
     segments(
       x0 = x[i],
