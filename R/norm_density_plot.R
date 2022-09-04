@@ -23,23 +23,23 @@
 #'
 
 norm_density_plot = function(
-  x_1,
-  pop_mean = 0,
-  pop_sd = 1,
-  xmin = NULL,
-  xmax = NULL,
-  len = 1000,
-  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  # fill_bkg = rgb(0, 0, 0, 0),
-  digits = 2,
-  lty_density = 2,
-  x_lab = "x",
-  y_lab = "f(x)",
-  title_fmt =
-    paste0(
-      "x = %1$s\n",
-      "probability density (height of the curve at x) = %2$s\n",
-      "cumulative density (area of shaded region) = %3$s"))
+    x_1,
+    pop_mean = 0,
+    pop_sd = 1,
+    xmin = NULL,
+    xmax = NULL,
+    len = 1000,
+    fill_cdf = rgb(0, 0.3, 0.8, 0.25),
+    # fill_bkg = rgb(0, 0, 0, 0),
+    digits = 2,
+    lty_density = 2,
+    x_lab = "x",
+    y_lab = "f(x)",
+    title_fmt =
+      paste0(
+        "x = %1$s\n",
+        "probability density (height of the curve at x) = %2$s\n",
+        "cumulative density (area of shaded region) = %3$s"))
 {
 
   if (FALSE)
@@ -118,19 +118,19 @@ norm_density_plot = function(
 
 
 norm_cdf_plot = function(
-  x_1,
-  pop_mean = 0,
-  pop_sd = 1,
-  xmin = NULL,
-  xmax = NULL,
-  len = 1000,
-  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  # fill_bkg = rgb(0, 0, 0, 0),
-  digits = 2,
-  lty_density = 2,
-  x_lab = "x",
-  y_lab = "f(x)",
-  title_fmt = "x: %1$s\nquantile: %2$s")
+    x_1,
+    pop_mean = 0,
+    pop_sd = 1,
+    xmin = NULL,
+    xmax = NULL,
+    len = 1000,
+    fill_cdf = rgb(0, 0.3, 0.8, 0.25),
+    # fill_bkg = rgb(0, 0, 0, 0),
+    digits = 2,
+    lty_density = 2,
+    x_lab = "x",
+    y_lab = "f(x)",
+    title_fmt = "x: %1$s\nquantile: %2$s")
 {
   requireNamespace("ggplot2")
 
@@ -222,19 +222,19 @@ if(FALSE)
 #' @export
 
 norm_quantile_plot = function(
-  p_1,
-  pop_mean = 0,
-  pop_sd = 1,
-  xmin = 0.001,
-  xmax = 0.999,
-  len = 1000,
-  fill_cdf = rgb(0, 0.3, 0.8, 0.25),
-  # fill_bkg = rgb(0, 0, 0, 0),
-  digits = 2,
-  lty_density = 2,
-  y_lab = "x",
-  x_lab = "quantile",
-  title_fmt = "quantile: %1$s\nx: %2$s\n")
+    p_1,
+    pop_mean = 0,
+    pop_sd = 1,
+    xmin = 0.001,
+    xmax = 0.999,
+    len = 1000,
+    fill_cdf = rgb(0, 0.3, 0.8, 0.25),
+    # fill_bkg = rgb(0, 0, 0, 0),
+    digits = 2,
+    lty_density = 2,
+    y_lab = "x",
+    x_lab = "quantile",
+    title_fmt = "quantile: %1$s\nx: %2$s\n")
 {
 
   requireNamespace("ggplot2")
@@ -286,11 +286,11 @@ norm_quantile_plot = function(
 #'
 
 build_dnorm_dat = function(
-  xmin = -2,
-  xmax = 2,
-  len = 100,
-  pop_mean = 0,
-  pop_sd = 1
+    xmin = -2,
+    xmax = 2,
+    len = 100,
+    pop_mean = 0,
+    pop_sd = 1
 )
 {
   if (FALSE)
@@ -326,11 +326,11 @@ build_dnorm_dat = function(
 #' @export
 #'
 build_qnorm_dat = function(
-  xmin,
-  xmax,
-  len = 100,
-  pop_mean = 0,
-  pop_sd = 1
+    xmin,
+    xmax,
+    len = 100,
+    pop_mean = 0,
+    pop_sd = 1
 )
 {
   x = seq(xmin, xmax, length.out = len)
@@ -357,11 +357,11 @@ build_qnorm_dat = function(
 #' @export
 #'
 build_pnorm_dat = function(
-  xmin = -2,
-  xmax = 2,
-  len = 100,
-  pop_mean = 0,
-  pop_sd = 1
+    xmin = -2,
+    xmax = 2,
+    len = 100,
+    pop_mean = 0,
+    pop_sd = 1
 )
 {
   x = seq(xmin, xmax, length.out = len)
@@ -393,18 +393,18 @@ build_pnorm_dat = function(
 #' @export
 
 plot_norm_tails = function(
-  lower_tail = 0.025,
-  upper_tail = 0.975,
-  pop_mean = 0,
-  pop_sd = 1,
-  xmin = NULL,
-  xmax = NULL,
-  len = 1000,
-  fill_lower = rgb(0, 0.3, 0.8, 0.25),
-  fill_middle = rgb(0, 0, 0, 0),
-  fill_upper = rgb(0, 0.3, 0.8, 0.25),
-  y_lab = "f(x)",
-  x_lab = "x"
+    lower_tail = 0.025,
+    upper_tail = 0.975,
+    pop_mean = 0,
+    pop_sd = 1,
+    xmin = NULL,
+    xmax = NULL,
+    len = 1000,
+    fill_lower = rgb(0, 0.3, 0.8, 0.25),
+    fill_middle = rgb(0, 0, 0, 0),
+    fill_upper = rgb(0, 0.3, 0.8, 0.25),
+    y_lab = "f(x)",
+    x_lab = "x"
 
 )
 {
@@ -463,14 +463,15 @@ plot_norm_tails = function(
     fill_middle = fill_middle,
     fill_upper = fill_upper)
 
-  return(
-    ggplot(norm_dat) +
-      geom_line(aes(x, y1)) +
-      gg_ribbons$middle +
-      gg_ribbons$tails$lower +
-      gg_ribbons$tails$upper +
-      ylab(y_lab) + xlab(x_lab)
-  )
+  out =   ggplot(norm_dat) +
+    geom_line(aes(x, y1)) +
+    gg_ribbons$middle +
+    gg_ribbons$tails$lower +
+    gg_ribbons$tails$upper +
+    ylab(y_lab) + xlab(x_lab)
+
+
+  return(out)
 }
 
 
@@ -487,11 +488,11 @@ plot_norm_tails = function(
 #' @export
 #'
 build_dt_dat = function(
-  df_sample,
-  ncp_sample,
-  xmin,
-  xmax,
-  len
+    df_sample,
+    ncp_sample,
+    xmin,
+    xmax,
+    len
 )
 {
   x = seq(xmin, xmax, length.out = len)
@@ -525,19 +526,19 @@ build_dt_dat = function(
 #' @export
 
 plot_t_tails = function(
-  lower_tail = 0.025,
-  upper_tail = 0.925,
-  df_sample = 30,
-  ncp_sample = 0,
-  xmin = NULL,
-  xmax = NULL,
-  len = 1000,
-  fill_lower = rgb(0, 0.3, 0.8, 0.25),
-  fill_middle = rgb(0, 0, 0, 0),
-  fill_upper = rgb(0, 0.3, 0.8, 0.25),
-  y_lab = "f(x)",
-  x_lab = "x"#,
-  # t_crit = 0.05
+    lower_tail = 0.025,
+    upper_tail = 0.925,
+    df_sample = 30,
+    ncp_sample = 0,
+    xmin = NULL,
+    xmax = NULL,
+    len = 1000,
+    fill_lower = rgb(0, 0.3, 0.8, 0.25),
+    fill_middle = rgb(0, 0, 0, 0),
+    fill_upper = rgb(0, 0.3, 0.8, 0.25),
+    y_lab = "f(x)",
+    x_lab = "x"#,
+    # t_crit = 0.05
 )
 {
 
@@ -620,9 +621,9 @@ plot_t_tails = function(
 #' @export
 
 build_tail_dat = function(
-  dat,
-  lower_x = -1.96,
-  upper_x = NULL)
+    dat,
+    lower_x = -1.96,
+    upper_x = NULL)
 {
   if (FALSE)
   {
@@ -673,13 +674,13 @@ build_tail_dat = function(
 
 
 build_ribbons = function(
-  ribbon_dat,
-  fill_lower = rgb(0, 0.3, 0.8, 0.25),
-  fill_middle = rgb(0, 0, 0, 0),
-  fill_upper = rgb(0, 0.3, 0.8, 0.25),
-  col_lower = "black",
-  col_middle = "black",
-  col_upper = "black")
+    ribbon_dat,
+    fill_lower = rgb(0, 0.3, 0.8, 0.25),
+    fill_middle = rgb(0, 0, 0, 0),
+    fill_upper = rgb(0, 0.3, 0.8, 0.25),
+    col_lower = "black",
+    col_middle = "black",
+    col_upper = "black")
 {
   if(is.null(ribbon_dat$tails$lower))
   {
@@ -710,13 +711,14 @@ build_ribbons = function(
       mapping = aes(x = x, ymin = y0, ymax = y1),
       fill = fill_middle)
 
-  return(list(
-    tails = list(
+  return(
+    list(
+      tails = list(
+        lower = ribbon_lower,
+        upper = ribbon_upper),
+      middle = ribbon_middle,
       lower = ribbon_lower,
-      upper = ribbon_upper),
-    middle = ribbon_middle),
-    lower = ribbon_lower,
-    upper = ribbon_upper)
+      upper = ribbon_upper))
 }
 
 #' Plot a confidence interval on a normal curve
@@ -746,26 +748,49 @@ build_ribbons = function(
 #' @export
 #'
 gg_norm_conf_int = function(
-  alpha = 0.05,
-  pop_mean = 0,
-  pop_sd = 1,
-  xmin = NULL,
-  xmax = NULL,
-  len = 1000,
-  fill_upper = rgb(0, 0.3, 0.8, 0.25),
-  fill_lower = rgb(0, 0.3, 0.8, 0.25),
-  fill_middle = rgb(0, 0, 0, 0),
-  y_lab = "f(x)",
-  x_lab = "x",
-  lty_v = 2,
-  title_fmt = "Interval contains %.1f%s of probabiltiy density.",
-  arrow_label_fmt = "$%1$0.1f \\pm %2$0.2f \\times \\sigma$",
-  arrow_size = 0.3,
-  digits_label = 0,
-  digits_axis = 3,
-  x_auto_breaks = -1:1
+    alpha = 0.05,
+    pop_mean = 0,
+    pop_sd = 1,
+    xmin = NULL,
+    xmax = NULL,
+    len = 1000,
+    fill_upper = rgb(0, 0.3, 0.8, 0.25),
+    fill_lower = rgb(0, 0.3, 0.8, 0.25),
+    fill_middle = rgb(0, 0, 0, 0),
+    y_lab = "f(x)",
+    x_lab = "x",
+    lty_v = 2,
+    title_fmt = "Interval contains %.1f%s of probabiltiy density.",
+    arrow_label_fmt = "$%1$0.1f \\pm %2$0.2f \\times \\sigma$",
+    arrow_size = 0.3,
+    digits_label = 0,
+    digits_axis = 3,
+    x_auto_breaks = -1:1
 )
 {
+  if (FALSE)
+  {
+    alpha = 0.05
+    pop_mean = 0
+    pop_sd = 1
+    xmin = NULL
+    xmax = NULL
+    len = 1000
+    fill_upper = rgb(0, 0.3, 0.8, 0.25)
+    fill_lower = rgb(0, 0.3, 0.8, 0.25)
+    fill_middle = rgb(0, 0, 0, 0)
+    y_lab = "f(x)"
+    x_lab = "x"
+    lty_v = 2
+    title_fmt = "Interval contains %.1f%s of probabiltiy density."
+    arrow_label_fmt = "$%1$0.1f \\pm %2$0.2f \\times \\sigma$"
+    arrow_size = 0.3
+    digits_label = 0
+    digits_axis = 3
+    x_auto_breaks = -1:1
+  }
+
+
   # Convenience variables
   {
     pct_interval = round(100 * (1 - alpha), digits = digits_label)
