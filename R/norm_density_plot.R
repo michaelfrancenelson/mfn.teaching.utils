@@ -714,11 +714,12 @@ build_ribbons = function(
     tails = list(
       lower = ribbon_lower,
       upper = ribbon_upper),
-    middle = ribbon_middle),
+    middle = ribbon_middle,
     lower = ribbon_lower,
-    upper = ribbon_upper)
+    upper = ribbon_upper))
 }
 
+gg_norm_conf_int()
 #' Plot a confidence interval on a normal curve
 #'
 #' @param alpha alpha for the fill
