@@ -401,7 +401,7 @@ plot_norm_tails = function(
     xmax = NULL,
     len = 1000,
     fill_lower = rgb(0, 0.3, 0.8, 0.25),
-    fill_middle = rgb(0, 0, 0, 0),
+    fill_middle = rgb(1, 0, 0, 0),
     fill_upper = rgb(0, 0.3, 0.8, 0.25),
     y_lab = "f(x)",
     x_lab = "x"
@@ -411,9 +411,9 @@ plot_norm_tails = function(
 
   if (FALSE)
   {
-    lower_tail = 0.05
-    upper_tail = 0.925
     upper_tail = NULL
+    lower_tail = 0.025
+    upper_tail = 0.925
     x_1 = 0.1
     pop_mean = 0
     pop_sd = 1
@@ -422,7 +422,7 @@ plot_norm_tails = function(
     len = 1000
     fill_upper = rgb(0, 0.3, 0.8, 0.25)
     fill_lower = rgb(0, 0.3, 0.8, 0.25)
-    fill_middle = rgb(0, 0, 0, 0)
+    fill_middle = rgb(0, 0, 1, 0.5)
     digits = 2
     lty_density = 2
     x_lab = "x"
@@ -676,7 +676,7 @@ build_tail_dat = function(
 build_ribbons = function(
     ribbon_dat,
     fill_lower = rgb(0, 0.3, 0.8, 0.25),
-    fill_middle = rgb(0, 0, 0, 0),
+    fill_middle = rgb(0, 1, 0, 0.5),
     fill_upper = rgb(0, 0.3, 0.8, 0.25),
     col_lower = "black",
     col_middle = "black",
@@ -716,19 +716,9 @@ build_ribbons = function(
       tails = list(
         lower = ribbon_lower,
         upper = ribbon_upper),
-      middle = ribbon_middle,
-      lower = ribbon_lower,
-<<<<<<< HEAD
-      upper = ribbon_upper),
-    middle = ribbon_middle,
-    lower = ribbon_lower,
-    upper = ribbon_upper))
-=======
-      upper = ribbon_upper))
->>>>>>> 8b975854549e70c58662d09ca2c5f2626b59247f
+      middle = ribbon_middle))
 }
 
-gg_norm_conf_int()
 #' Plot a confidence interval on a normal curve
 #'
 #' @param alpha alpha for the fill
@@ -764,7 +754,7 @@ gg_norm_conf_int = function(
     len = 1000,
     fill_upper = rgb(0, 0.3, 0.8, 0.25),
     fill_lower = rgb(0, 0.3, 0.8, 0.25),
-    fill_middle = rgb(0, 0, 0, 0),
+    fill_middle = rgb(0, 0.8, 0.1, 0.25),
     y_lab = "f(x)",
     x_lab = "x",
     lty_v = 2,
@@ -784,9 +774,9 @@ gg_norm_conf_int = function(
     xmin = NULL
     xmax = NULL
     len = 1000
-    fill_upper = rgb(0, 0.3, 0.8, 0.25)
-    fill_lower = rgb(0, 0.3, 0.8, 0.25)
-    fill_middle = rgb(0, 0, 0, 0)
+    fill_upper = rgb(1, 0, 0, 0.25)
+    fill_lower = rgb(1, 0, 0, 0.25)
+    fill_middle = rgb(0, 0.3, 0.8, 0.25)
     y_lab = "f(x)"
     x_lab = "x"
     lty_v = 2
@@ -814,7 +804,6 @@ gg_norm_conf_int = function(
 
   x_breaks = c(round(q_low, digits_axis), round(q_hi, digits_axis), x_auto_breaks)
 
-
   arrow_dat = data.frame(
     x = q_low,
     xend = q_hi,
@@ -829,9 +818,9 @@ gg_norm_conf_int = function(
     xmin = xmin,
     xmax = xmax,
     len = len,
-    fill_middle = rgb(0, 0.3, 0.8, 0.25),
-    fill_lower = rgb(.7, 0, 0, 0.3),
-    fill_upper = rgb(.7, 0, 0, 0.3),
+    fill_middle = fill_middle,
+    fill_lower = fill_lower,
+    fill_upper = fill_upper,
     y_lab = y_lab,
     x_lab = x_lab
   )
